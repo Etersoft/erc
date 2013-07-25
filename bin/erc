@@ -111,7 +111,11 @@ Usage="Usage: $progname [options] [<command>] [params]..."
 Descr="erc - universal archive manager"
 
 cmd=$1
-shift
+if get_archive_type "$cmd" >/dev/null ; then
+    cmd=extract
+else
+    shift
+fi
 
 # Just printout help if run without args
 if [ -z "$cmd" ] ; then
