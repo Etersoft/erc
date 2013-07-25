@@ -38,24 +38,44 @@ check_tty
 list_formats()
 {
 	a= patool formats | grep ".* files:" | sed "s/ .*//g"
+	echo "tar.gz tar.bz2 tar.xz"
+}
+
+# 1.zip -> zip
+get_archive_ext()
+{
+	local i
+	for i in $(list_formats) ; do
+		local nf=$(basename "$1" .$i)
+		[ "$nf" != "$1" ] && echo "$i" && return
+	done
+	return 1
 }
 
 # 1.zip -> 1
 get_archive_name()
 {
-	local i
-	for i in $(list_formats) ; do
-		local nf=$(basename "$1" .$i)
-		[ "$nf" != "$1" ] && echo "$nf" && return
-	done
-	echo "$1"
+	local ext
+	ext=$(get_archive_ext "$1")
+	if [ -n "$ext" ] ; then
+		basename "$1" .$ext
+	else
+		echo "$1"
+		return 1
+	fi
 }
 
 # TODO: improve
+# TODO: detect by extension as default
 get_archive_type()
 {
+	local aext
 	file "$1" | grep -q "Zip archive data" && echo "zip" && return
 	file "$1" | grep -q "RAR archive data" && echo "rar" && return
+	if aext=$(get_archive_ext "$1") ; then
+		echo $aext
+		return
+	fi
 	return 1
 }
 
