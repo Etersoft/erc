@@ -1,0 +1,182 @@
+#!/bin/sh
+#
+# Copyright (C) 2012  Etersoft
+# Copyright (C) 2012  Vitaly Lipatov <lav@etersoft.ru>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+
+# copied from eepm project
+
+# copied from /etc/init.d/outformat (ALT Linux)
+isatty()
+{
+	# Set a sane TERM required for tput
+	[ -n "$TERM" ] || TERM=dumb
+	export TERM
+	test -t 1
+}
+
+check_tty()
+{
+	isatty || return
+	which tput >/dev/null 2>/dev/null || return
+	# FreeBSD does not support tput -S
+	echo | tput -S >/dev/null 2>/dev/null || return
+	[ -z "$USETTY" ] || return
+	export USETTY=1
+}
+
+: ${BLACK:=0} ${RED:=1} ${GREEN:=2} ${YELLOW:=3} ${BLUE:=4} ${MAGENTA:=5} ${CYAN:=6} ${WHITE:=7}
+
+set_boldcolor()
+{
+	[ "$USETTY" = "1" ] || return
+	{
+		echo bold
+		echo setaf $1
+	} |tput -S
+}
+
+restore_color()
+{
+	[ "$USETTY" = "1" ] || return
+	{
+		echo op; # set Original color Pair.
+		echo sgr0; # turn off all special graphics mode (bold in our case).
+	} |tput -S
+}
+
+echover()
+{
+    [ -n "$verbose" ] || return
+    echo "$*" >&2
+}
+
+# Print command line and run command line
+showcmd()
+{
+	if [ -z "$quiet" ] ; then
+		set_boldcolor $GREEN
+		local PROMTSIG="\$"
+		[ "$UID" = 0 ] && PROMTSIG="#"
+		echo " $PROMTSIG $@"
+		restore_color
+	fi >&2
+}
+
+# Print command line and run command line
+docmd()
+{
+	showcmd "$@"
+	"$@"
+}
+
+# Run every arg with docmd
+docmd_foreach()
+{
+	local cmd
+	cmd="$1"
+	#showcmd "$@"
+	shift
+	for pkg in "$@" ; do
+		docmd $cmd $pkg
+	done
+}
+
+# Print command line and run command line with SUDO
+sudocmd()
+{
+	showcmd "$SUDO $@"
+	$SUDO "$@"
+}
+
+# Run every arg with sudocmd
+sudocmd_foreach()
+{
+	local cmd
+	cmd="$1"
+	#showcmd "$@"
+	shift
+	for pkg in "$@" ; do
+		sudocmd $cmd $pkg
+	done
+}
+
+
+filter_strip_spaces()
+{
+        # possible use just
+        #xargs echo
+        sed -e "s| \+| |g" | \
+                sed -e "s|^ ||" | sed -e "s| \$||"
+}
+
+strip_spaces()
+{
+        echo "$*" | filter_strip_spaces
+}
+
+# param true false
+subst_option()
+{
+	eval "[ -n \"\$$1\" ]" && echo "$2" || echo "$3"
+}
+
+store_output()
+{
+    # use make_temp_file from etersoft-build-utils
+    RC_STDOUT=$(mktemp)
+    #RC_STDERR=$(mktemp)
+    "$@" 2>&1 | tee $RC_STDOUT
+    # http://tldp.org/LDP/abs/html/bashver3.html#PIPEFAILREF
+    return $PIPESTATUS
+}
+
+clean_store_output()
+{
+    rm -f $RC_STDOUT
+}
+
+# Print error message and stop the program
+fatal()
+{
+	if [ -z "$TEXTDOMAIN" ] ; then
+		echo "Error: $@" >&2
+#	else
+#		echog "Error in $0: $@" >&2
+	fi
+	exit 1
+}
+
+# Print warning message
+warning()
+{
+	if [ -z "$TEXTDOMAIN" ] ; then
+		echo "Warning: $@" >&2
+#	else
+#		echog "Error in $0: $@" >&2
+	fi
+}
+
+# print options description from HELPCMD/HELPOPT lines in the code
+get_help()
+{
+    grep -v -- "^#" $0 | grep -- "# $1" | while read n ; do
+        opt=$(echo $n | sed -e "s|) # $1:.*||g")
+        desc=$(echo $n | sed -e "s|.*) # $1:||g")
+        printf "    %-20s %s\n" $opt "$desc"
+    done
+}
+
