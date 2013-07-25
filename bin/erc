@@ -132,14 +132,14 @@ case $cmd in
     -h|--help|help)       # HELPOPT: this help
         phelp
         ;;
-    -v|--version)         # HELPOPT: print version
+    -v|--version)            # HELPOPT: print version
         print_version
         ;;
-    a|-a|create)             # HELPCMD: create archive
+    a|-a|create|pack)        # HELPCMD: create archive
         # TODO: realize archive addition
         docmd patool $verbose create "$@"
         ;;
-    e|x|-e|-x|extract)          # HELPCMD: extract files from archive
+    e|x|-e|-x|u|-u|extract|unpack)          # HELPCMD: extract files from archive
         docmd patool $verbose extract "$@"
         ;;
 # TODO: realize deletion
@@ -175,6 +175,7 @@ case $cmd in
         docmd patool formats "$@"
         ;;
     *)
+        # TODO: If we have archive in parameter, just unpack it
         fatal "Unknown command $1"
         ;;
 esac
