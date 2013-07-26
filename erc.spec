@@ -1,5 +1,5 @@
 Name: erc
-Version: 0.1
+Version: 0.2
 Release: alt1
 
 Summary: Etersoft Archiver
@@ -38,11 +38,17 @@ See detailed description here: http://wiki.etersoft.ru/ERC
 #chmod a+x %buildroot%_datadir/%name/{erc-}*
 
 %files
-%doc README LICENSE
+%doc README LICENSE TODO
 %_bindir/erc
+%_bindir/ercat
 %_datadir/%name/
 #%_sysconfdir/bash_completion.d/erc
 
 %changelog
+* Fri Jul 26 2013 Vitaly Lipatov <lav@altlinux.ru> 0.2-alt1
+- erc: unpack archive by default
+- erc: add support for target arch to create and repack
+- introduce ercat: cat any archive to stdout (like bzcat)
+
 * Thu Jul 25 2013 Vitaly Lipatov <lav@altlinux.ru> 0.1-alt1
 - initial build for ALT Linux Sisyphus

@@ -1,0 +1,3 @@
+ $ patool --verbose create file1.gz file1
+patool: Creating file1.gz ...
+patool error: error creating file1.gz: 'module' object has no attribute 'create_gzip'
