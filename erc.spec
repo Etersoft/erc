@@ -1,5 +1,5 @@
 Name: erc
-Version: 0.2
+Version: 0.3
 Release: alt1
 
 Summary: Etersoft Archiver
@@ -16,7 +16,7 @@ Source: ftp://updates.etersoft.ru/pub/Etersoft/Sisyphus/sources/tarball/%name-%v
 BuildArchitectures: noarch
 
 # who really does all our work
-Requires: patool
+Requires: patool >= 1.1
 
 %description
 Etersoft Arhiver is the archive manager for any format
@@ -45,6 +45,10 @@ See detailed description here: http://wiki.etersoft.ru/ERC
 #%_sysconfdir/bash_completion.d/erc
 
 %changelog
+* Fri Jul 26 2013 Vitaly Lipatov <lav@altlinux.ru> 0.3-alt1
+- small fixes
+- erc: enable search and improve help
+
 * Fri Jul 26 2013 Vitaly Lipatov <lav@altlinux.ru> 0.2-alt1
 - erc: unpack archive by default
 - erc: add support for target arch to create and repack
