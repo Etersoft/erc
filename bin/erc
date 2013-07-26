@@ -56,7 +56,8 @@ $(get_help HELPOPT)
  Examples:
     # erc a archive.zip file(s)... - pack files to archive.zip
     # erc [x] archive.zip - unpack
-    # erc [repack] archive.zip 7z: - repack to 7z
+    # erc [repack] archive1.zip... archive2.rar 7z: - repack all to 7z
+    # erc [repack] archive.zip archive.7z - repack zip to 7z
     # erc file zip: - pack file to zip
 "
 }
@@ -137,15 +138,15 @@ case $cmd in
         # check 2 arg
         docmd patool $verbose diff "$@"
         ;;
-    b|-b|bench|benchmark)    # HELPCMD: benchmark
+    b|-b|bench|benchmark)    # HELPCMD: do CPU benchmark
         #assure_cmd 7z
         # TODO: can be 7za?
         docmd 7z b
         ;;
-#    search)               # HELPCMD:
-#        docmd patool $verbose search "$@"
-#        ;;
-    repack|conv)          # HELPCMD:
+    search|grep)               # HELPCMD: search in files from archive
+        docmd patool $verbose search "$@"
+        ;;
+    repack|conv)          # HELPCMD: convert source archive to target
         # TODO: need repack remove source file?
         # TODO: check for 2 arg
         if ! is_target_format $lastarg ; then
@@ -161,7 +162,7 @@ case $cmd in
         done
 
         ;;
-    formats)              # HELPCMD:
+    formats)              # HELPCMD: lists supported archive formats
         # TODO: print allowed with current programs separately
         docmd patool formats "$@"
         ;;
