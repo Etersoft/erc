@@ -52,6 +52,12 @@ $(get_help HELPCMD)
 
  Options:
 $(get_help HELPOPT)
+
+ Examples:
+    # erc a archive.zip file(s)... - pack files to archive.zip
+    # erc [x] archive.zip - unpack
+    # erc [repack] archive.zip 7z: - repack to 7z
+    # erc file zip: - pack file to zip
 "
 }
 
