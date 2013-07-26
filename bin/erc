@@ -162,6 +162,7 @@ case $cmd in
 
         ;;
     formats)              # HELPCMD:
+        # TODO: print allowed with current programs separately
         docmd patool formats "$@"
         ;;
     *)

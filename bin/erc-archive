@@ -22,7 +22,9 @@
 list_formats()
 {
 	a= patool formats | grep ".* files:" | sed "s/ .*//g"
-	echo "tar.gz tar.bz2 tar.xz"
+	# TODO: do not use patool formats in such case?
+	# See ArchiveCompressions in patool
+	echo "bz2 gz gzip lzip xz lzma compress bzip2 Z tar.gz tar.bz2 tar.xz tar.bzip2 tar.lzma cpio.gz cpio.bz2 cpio.xz"
 }
 
 # returns true if XXX:
@@ -63,9 +65,12 @@ get_archive_name()
 get_archive_type()
 {
 	local aext
-	test -r "$1" || return
+	test -r "$1" || { warning "Couldn't read $1" ; return 1; }
+
+	# TODO: rewrite with mime
 	file "$1" | grep -q "Zip archive data" && echo "zip" && return
 	file "$1" | grep -q "RAR archive data" && echo "rar" && return
+
 	if aext=$(get_archive_ext "$1") ; then
 		echo $aext
 		return

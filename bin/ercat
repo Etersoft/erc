@@ -83,16 +83,22 @@ esac
 # TODO: check file existence
 # TODO: check for two or more files
 for f in $@ ; do
-    TYPE=$(get_archive_ext $f) || continue
+    TYPE=$(get_archive_ext $f) || { warning "Skipping unrecognized $f" ; continue ; }
     case $TYPE in
         gz)
             docmd gunzip -c "$f" || fatal
             ;;
         bz2)
-            docmd xzcat "$f" || fatal
+            docmd bzcat "$f" || fatal
             ;;
         xz)
             docmd xzcat "$f" || fatal
+            ;;
+        Z|compress)
+            docmd zcat "$f" || fatal
+            ;;
+        lzma)
+            docmd lzcat "$f" || fatal
             ;;
         *)
             fatal "Unsupported compression format $TYPE"

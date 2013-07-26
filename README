@@ -1,12 +1,3 @@
-eds hosts
-
-eed resolve
-eed hosts
-eed source
-eed xorg
-eed samba
-eed sshd
-
 erc x|extract
 erc l|list
 erc t|test
@@ -15,14 +6,6 @@ erc diff
 erc search
 erc repack
 erc formats
-
-
-e ed
-e ar
-e pm
-
-
-работа с cpio.gz (.img для initrd), то есть вообще некая рекурсия — как с tar.
 
 $ erc a|-a архив.zip файлы — создать
 $ erc x|-x архив.zip [файлы] — извлечь
