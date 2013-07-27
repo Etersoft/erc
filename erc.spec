@@ -6,7 +6,7 @@ Summary: Etersoft Archiver
 
 License: AGPLv3
 Group: System/Configuration/Packaging
-Url: http://wiki.etersoft.ru/ERC
+Url: https://github.com/vitlav/erc
 
 Packager: Vitaly Lipatov <lav@altlinux.ru>
 
@@ -21,8 +21,9 @@ Requires: patool >= 1.1
 %description
 Etersoft Arhiver is the archive manager for any format
 It provides universal interface to any archive manager.
+Patool is used for real work with archives.
 
-See detailed description here: http://wiki.etersoft.ru/ERC
+See detailed russian description here: http://wiki.etersoft.ru/ERC
 
 %prep
 %setup
