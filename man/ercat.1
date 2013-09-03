@@ -1,0 +1,41 @@
+'\" t
+.\"
+.\" Author: Vitaly Lipatov
+.\"
+.\" This file has been put into the public domain.
+.\" You can do whatever you want with this file.
+.\"
+.TH ERC 1 "August 2013" "Version 0.4"
+
+.SH NAME
+ercat \- cat any single archive file
+.SH SYNOPSIS
+.B ercat
+.RI name, [name...]
+.PP
+.br
+.SH DESCRIPTION
+.BI
+ercat reads any single archive files or plain text files and writes its contents to stdout.
+
+.SH OPTIONS
+.TP
+.I -h
+Display help
+.TP
+.I -V
+Show version and exit
+.SH EXAMPLES
+ # ercat /var/log/message.1.bz2 | grep "some word"
+ # ercat message message.?.bz2 | grep "some word"
+
+.SH BUGS
+Please report any bugs to lav@etersoft.ru
+.SH EXIT STATUS
+.B ercat
+will return zero on success and non zero on operation failure.
+.SH SEE ALSO
+.BR erc (1), eepm (1)
+.TP
+.B http://wiki.etersoft.ru/ERC
+ERC wiki page
