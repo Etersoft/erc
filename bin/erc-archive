@@ -60,6 +60,15 @@ get_archive_name()
 	fi
 }
 
+# FIXME
+is_plain_text()
+{
+	file --mime-type "$1" | grep -q "text/" && echo "plain" && return
+	file "$1" | grep -q "empty" && echo "plain" && return
+	return 1
+}
+
+
 # TODO: improve
 # TODO: detect by extension as default
 get_archive_type()
