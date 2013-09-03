@@ -1,5 +1,5 @@
 Name: erc
-Version: 0.3
+Version: 0.4
 Release: alt1
 
 Summary: Etersoft Archiver
@@ -43,9 +43,14 @@ See detailed russian description here: http://wiki.etersoft.ru/ERC
 %_bindir/erc
 %_bindir/ercat
 %_datadir/%name/
+%_man1dir/*
 #%_sysconfdir/bash_completion.d/erc
 
 %changelog
+* Tue Sep 03 2013 Vitaly Lipatov <lav@altlinux.ru> 0.4-alt1
+- ercat: add support for plain text files too
+- update README, add man pages
+
 * Fri Jul 26 2013 Vitaly Lipatov <lav@altlinux.ru> 0.3-alt1
 - small fixes
 - erc: enable search and improve help
