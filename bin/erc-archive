@@ -41,8 +41,7 @@ get_archive_ext()
 {
 	local i
 	for i in $(list_formats) ; do
-		local nf=$(basename "$1" .$i)
-		[ "$nf" != "$1" ] && echo "$i" && return
+		[ -z "${1/*.$i/}" ] && echo "$i" && return
 	done
 	return 1
 }
@@ -53,7 +52,7 @@ get_archive_name()
 	local ext
 	ext=$(get_archive_ext "$1")
 	if [ -n "$ext" ] ; then
-		basename "$1" .$ext
+		echo $(dirname "$1")/$(basename "$1" .$ext)
 	else
 		echo "$1"
 		return 1
