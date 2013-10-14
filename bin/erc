@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Copyright (C) 2013  Etersoft
 # Copyright (C) 2013  Vitaly Lipatov <lav@etersoft.ru>
@@ -78,7 +78,7 @@ cmd=$1
 eval lastarg=\${$#}
 
 # if the first arg is some archive, suggest extract
-if get_archive_type "$cmd" >/dev/null ; then
+if get_archive_type "$cmd" 2>/dev/null >/dev/null ; then
     if is_target_format $lastarg ; then
         cmd=repack
     else
