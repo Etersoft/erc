@@ -27,12 +27,16 @@ list_formats()
 	echo "bz2 gz gzip lzip xz lzma compress bzip2 Z tar.gz tar.bz2 tar.xz tar.bzip2 tar.lzma cpio.gz cpio.bz2 cpio.xz"
 }
 
-# returns true if XXX:
-# TODO: check for supported target
+# returns true if arg is XXX: from list_formats
 is_target_format()
 {
 	[ "${1/:/}" = "$1" ] && return 1
-	return 0
+	local arc="$(echo "$1" | sed -e 's|:.*||g')"
+	local i
+	for i in $(list_formats) ; do
+		[ "$i" = "$arc" ] && return 0
+	done
+	return 1
 }
 
 # TODO: detect by name, without comparing with existing?
