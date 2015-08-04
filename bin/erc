@@ -56,9 +56,10 @@ $(get_help HELPOPT)
  Examples:
     # erc a archive.zip file(s)... - pack files to archive.zip
     # erc [x] archive.zip - unpack
+    # unerc archive.zip - unpack
     # erc [repack] archive1.zip... archive2.rar 7z: - repack all to 7z
     # erc [repack] archive.zip archive.7z - repack zip to 7z
-    # erc file zip: - pack file to zip
+    # erc file/dir zip: - pack file to zip
 "
 }
 
@@ -74,26 +75,33 @@ progname="${0##*/}"
 Usage="Usage: $progname [options] [<command>] [params]..."
 Descr="erc - universal archive manager"
 
-cmd="$1"
+progname="${0##*/}"
+
 
 verbose=--verbose
 
-case "$cmd" in
+case "$1" in
     -h|--help|help)       # HELPOPT: this help
         phelp
         exit
         ;;
-    -v|--version)            # HELPOPT: print version
+    -v|--version)         # HELPOPT: print version
         print_version
         exit
         ;;
-    -q|--quiet)            # HELPOPT: be silent
+    -q|--quiet)           # HELPOPT: be silent
         verbose=
         shift
         ;;
 esac
 
 cmd="$1"
+
+case $progname in
+    unerc)
+        cmd=extract
+    ;;
+esac
 
 eval lastarg=\${$#}
 
