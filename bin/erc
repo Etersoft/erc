@@ -58,7 +58,7 @@ $(get_help HELPOPT)
     # erc [x] archive.zip - unpack
     # unerc archive.zip - unpack
     # erc [repack] archive1.zip... archive2.rar 7z: - repack all to 7z
-    # erc [repack] archive.zip archive.7z - repack zip to 7z
+    # erc -f [repack] archive.zip archive.7z - force repack zip to 7z (override target in anyway)
     # erc file/dir zip: - pack file to zip
 "
 }
@@ -78,6 +78,7 @@ Descr="erc - universal archive manager"
 progname="${0##*/}"
 
 
+force=
 verbose=--verbose
 
 case "$1" in
@@ -85,12 +86,16 @@ case "$1" in
         phelp
         exit
         ;;
-    -v|--version)         # HELPOPT: print version
+    -V|--version)         # HELPOPT: print version
         print_version
         exit
         ;;
     -q|--quiet)           # HELPOPT: be silent
         verbose=
+        shift
+        ;;
+    -f|--force)           # HELPOPT: override target
+        force=-f
         shift
         ;;
 esac
@@ -130,12 +135,15 @@ fi
 
 case $cmd in
     a|-a|create|pack)        # HELPCMD: create archive
-        # TODO: realize archive addition if already exist
+        # TODO: realize archive addition if already exist (and separate adding?)
         if is_target_format $lastarg ; then
             [ $# = 2 ] || fatal "Need two args"
-            docmd patool $verbose create "$(build_target_name "$1" "$2")" "$1"
+            target="$(build_target_name "$1" "$2")"
+            [ -e "$target" ] && [ -n "$force" ] && docmd rm -f "$target"
+            docmd patool $verbose create "$target" "$1"
             exit
         fi
+        [ -e "$1" ] && [ -n "$force" ] && docmd rm -f "$1"
         docmd patool $verbose create "$@"
         ;;
     e|x|-e|-x|u|-u|extract|unpack)          # HELPCMD: extract files from archive
@@ -171,6 +179,7 @@ case $cmd in
         # TODO: check for 2 arg
         if ! is_target_format $lastarg ; then
             [ $# = 2 ] || fatal "Need two args"
+            [ -e "$2" ] && [ -n "$force" ] && docmd rm -f "$2"
             docmd patool $verbose repack "$1" "$2"
             exit
         fi
@@ -178,7 +187,9 @@ case $cmd in
         # add support for target zip:
         for i in "$@" ; do
             [ "$i" = "$lastarg" ] && continue
-            docmd patool $verbose repack "$i" "$(build_target_name "$i" "$lastarg")"
+            target="$(build_target_name "$i" "$lastarg")"
+            [ -e "$target" ] && [ -n "$force" ] && docmd rm -f "$target"
+            docmd patool $verbose repack "$i" "$target" || exit
         done
 
         ;;
