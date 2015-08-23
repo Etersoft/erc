@@ -179,6 +179,7 @@ case $cmd in
         # TODO: check for 2 arg
         if ! is_target_format $lastarg ; then
             [ $# = 2 ] || fatal "Need two args"
+            [ "$(realpath "$1")" = "$(realpath "$2")" ] && warning "Output file is the same as input" && exit
             [ -e "$2" ] && [ -n "$force" ] && docmd rm -f "$2"
             docmd patool $verbose repack "$1" "$2"
             exit
@@ -188,6 +189,7 @@ case $cmd in
         for i in "$@" ; do
             [ "$i" = "$lastarg" ] && continue
             target="$(build_target_name "$i" "$lastarg")"
+            [ "$(realpath "$1")" = "$(realpath "$target")" ] && warning "Output file is the same as input" && exit
             [ -e "$target" ] && [ -n "$force" ] && docmd rm -f "$target"
             docmd patool $verbose repack "$i" "$target" || exit
         done
