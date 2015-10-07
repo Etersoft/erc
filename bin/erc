@@ -134,7 +134,7 @@ fi
 # TODO: Если программа-архиватор не установлена, предлагать установку с помощью epm
 
 case $cmd in
-    a|-a|create|pack)        # HELPCMD: create archive
+    a|-a|create|pack|add)        # HELPCMD: create archive / add file(s) to archive
         # TODO: realize archive addition if already exist (and separate adding?)
         if is_target_format $lastarg ; then
             [ $# = 2 ] || fatal "Need two args"
