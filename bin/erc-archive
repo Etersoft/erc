@@ -17,14 +17,31 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-
+# it is extension list really
 # list all supported formats: tar rar and so on
 list_formats()
 {
+	local a
 	a= patool formats | grep ".* files:" | sed "s/ .*//g"
 	# TODO: do not use patool formats in such case?
 	# See ArchiveCompressions in patool
-	echo "bz2 gz gzip lzip xz lzma compress bzip2 Z tar.gz tgz tar.bz2 tar.xz tar.bzip2 tar.lzma cpio.gz cpio.bz2 cpio.xz zpaq pax"
+	cat <<EOF
+bz2
+gz
+lz4
+Z
+tgz
+pax
+EOF
+
+	local i
+	for i in gz bz2 xz bzip2 lz4 lzma ; do
+		echo "tar.$i"
+	done
+
+	for i in gz bz2 xz lz4 ; do
+		echo "cpio.$i"
+	done
 }
 
 # returns true if arg is XXX: from list_formats
@@ -32,10 +49,7 @@ is_target_format()
 {
 	[ "${1/:/}" = "$1" ] && return 1
 	local arc="$(echo "$1" | sed -e 's|:.*||g')"
-	local i
-	for i in $(list_formats) ; do
-		[ "$i" = "$arc" ] && return 0
-	done
+	list_formats | grep -q "^$arc$" && return 0
 	return 1
 }
 

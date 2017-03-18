@@ -197,7 +197,11 @@ case $cmd in
         ;;
     formats)              # HELPCMD: lists supported archive formats
         # TODO: print allowed with current programs separately
-        docmd patool formats "$@"
+        if [ -n "$verbose" ] ; then
+            docmd patool formats "$@"
+        else
+            list_formats
+        fi
         ;;
     *)
         # TODO: If we have archive in parameter, just unpack it
