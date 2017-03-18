@@ -81,6 +81,7 @@ esac
 
 # TODO: check ext
 # TODO: check file existence
+# TODO: check by content
 for f in $@ ; do
     TYPE=$(get_archive_ext $f) || TYPE=$(is_plain_text $f) || { warning "Skipping unrecognized $f" ; continue ; }
     case $TYPE in
@@ -98,6 +99,9 @@ for f in $@ ; do
             ;;
         lzma)
             docmd lzcat "$f" || fatal
+            ;;
+        lz4)
+            docmd lz4cat "$f" || fatal
             ;;
         plain)
             docmd cat "$f" || fatal
