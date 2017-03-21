@@ -1,3 +1,11 @@
+patool: msi lz4
+pzstd zstd
+
+Добавить параметр для compression level (0-9) и параллельные слова. Чтобы была возможность управлять сжатием
+https://sevenzip.osdn.jp/chm/cmdline/switches/method.htm
+
+Добавить параметр удаления после сжатия
+
 patool: работа с cpio.gz (.img для initrd), то есть вообще некая рекурсия — как с tar.
 patool: исправить создание gzip
 erc: добавить archiver_assure для того, чтобы автоматом через epm ставить нужный пакет архиватора
