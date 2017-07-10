@@ -1,5 +1,5 @@
 Name: erc
-Version: 0.9
+Version: 0.9.1
 Release: alt1
 
 Summary: Universal Archive Tool
@@ -48,6 +48,9 @@ See detailed russian description here: http://wiki.etersoft.ru/ERC
 #%_sysconfdir/bash_completion.d/erc
 
 %changelog
+* Mon Jul 10 2017 Vitaly Lipatov <lav@altlinux.ru> 0.9.1-alt1
+- ercat: add lz4 support
+
 * Fri Apr 22 2016 Vitaly Lipatov <lav@altlinux.ru> 0.9-alt1
 - skip repack for the same input and output file
 - erc: add add command
