@@ -21,8 +21,15 @@
 # list all supported formats: tar rar and so on
 list_formats()
 {
-	local a
-	a= patool formats | grep ".* files:" | sed "s/ .*//g"
+	local i
+	for i in gz bz2 xz bzip2 lz4 lzma ; do
+		echo "tar.$i"
+	done
+
+	for i in gz bz2 xz lz4 ; do
+		echo "cpio.$i"
+	done
+	a='' patool formats | grep ".* files:" | sed "s/ .*//g"
 	# TODO: do not use patool formats in such case?
 	# See ArchiveCompressions in patool
 	cat <<EOF
@@ -34,14 +41,6 @@ tgz
 pax
 EOF
 
-	local i
-	for i in gz bz2 xz bzip2 lz4 lzma ; do
-		echo "tar.$i"
-	done
-
-	for i in gz bz2 xz lz4 ; do
-		echo "cpio.$i"
-	done
 }
 
 # returns true if arg is XXX: from list_formats
