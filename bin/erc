@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Copyright (C) 2013-2015  Etersoft
-# Copyright (C) 2013-2015  Vitaly Lipatov <lav@etersoft.ru>
+# Copyright (C) 2013-2015, 2017  Etersoft
+# Copyright (C) 2013-2015, 2017  Vitaly Lipatov <lav@etersoft.ru>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -54,6 +54,7 @@ $(get_help HELPCMD)
 $(get_help HELPOPT)
 
  Examples:
+    # erc dir - pack dir to dirname.zip
     # erc a archive.zip file(s)... - pack files to archive.zip
     # erc [x] archive.zip - unpack
     # unerc archive.zip - unpack
@@ -66,7 +67,7 @@ $(get_help HELPOPT)
 print_version()
 {
         echo "Etersoft archive manager version @VERSION@"
-        echo "Copyright (c) Etersoft 2013-2015"
+        echo "Copyright (c) Etersoft 2013-2017"
         echo "This program may be freely redistributed under the terms of the GNU AGPLv3."
 }
 
@@ -79,6 +80,7 @@ progname="${0##*/}"
 
 
 force=
+target=
 verbose=--verbose
 
 case "$1" in
@@ -117,6 +119,11 @@ if get_archive_type "$cmd" 2>/dev/null >/dev/null ; then
     else
         cmd=extract
     fi
+# erc dir (pack to zip by default)
+elif [ -d "$cmd" ] && [ -z "$2" ] ; then
+    cmd=pack
+    target=$(basename "$1").zip
+# erc dir zip:
 elif test -r "$cmd" && is_target_format "$2" ; then
     cmd=pack
 else
@@ -136,13 +143,16 @@ fi
 case $cmd in
     a|-a|create|pack|add)        # HELPCMD: create archive / add file(s) to archive
         # TODO: realize archive addition if already exist (and separate adding?)
-        if is_target_format $lastarg ; then
+        if [ -z "$target" ] && is_target_format $lastarg ; then
             [ $# = 2 ] || fatal "Need two args"
             target="$(build_target_name "$1" "$2")"
+        fi
+        if [ -n "$target" ] ; then
             [ -e "$target" ] && [ -n "$force" ] && docmd rm -f "$target"
             docmd patool $verbose create "$target" "$1"
             exit
         fi
+        # erc archive.zip file(s)
         [ -e "$1" ] && [ -n "$force" ] && docmd rm -f "$1"
         docmd patool $verbose create "$@"
         ;;
