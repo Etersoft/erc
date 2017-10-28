@@ -6,12 +6,12 @@ Summary: Universal Archive Tool
 
 License: AGPLv3
 Group: System/Configuration/Packaging
-Url: https://github.com/vitlav/erc
+Url: https://github.com/Etersoft/erc
 
 Packager: Vitaly Lipatov <lav@altlinux.ru>
 
-# git-clone http://git.etersoft.ru/projects/korinf/erc.git
-Source: ftp://updates.etersoft.ru/pub/Etersoft/Sisyphus/sources/tarball/%name-%version.tar
+# Source-git: http://git.etersoft.ru/projects/korinf/erc.git
+Source: ftp://updates.etersoft.ru/pub/Korinf/sources/tarball/%name-%version.tar
 
 BuildArchitectures: noarch
 
