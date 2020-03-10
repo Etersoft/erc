@@ -116,6 +116,9 @@ for f in $@ ; do
         lzma)
             regular_unpack "$f" lzcat xz
             ;;
+        zst|zstd)
+            regular_unpack "$f" zstdcat zstd
+            ;;
         lz4)
             regular_unpack "$f" lz4cat lz4
             ;;

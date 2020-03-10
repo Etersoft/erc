@@ -39,6 +39,8 @@ lz4
 Z
 tgz
 pax
+zst
+zstd
 EOF
 
 }
