@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Copyright (C) 2013  Etersoft
-# Copyright (C) 2013  Vitaly Lipatov <lav@etersoft.ru>
+# Copyright (C) 2013, 2020  Etersoft
+# Copyright (C) 2013, 2020  Vitaly Lipatov <lav@etersoft.ru>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -50,9 +50,25 @@ $(get_help HELPOPT)
 print_version()
 {
         echo "Etersoft uncompressor version @VERSION@"
-        echo "Copyright (c) Etersoft 2013"
+        echo "Copyright (c) Etersoft 2013, 2020"
         echo "This program may be freely redistributed under the terms of the GNU AGPLv3."
 }
+
+regular_unpack()
+{
+    local file="$1"
+    local prg="$2"
+    local pkg="$3"
+    local opt="$4"
+
+    # instead of epm assure
+    if ! which "$prg" >/dev/null 2>/dev/null ; then
+        epm assure $prg $pkg || fatal "Try install $pkg package for $prg unpack command."
+    fi
+
+    docmd $prg $opt $file || fatal
+}
+
 
 progname="${0##*/}"
 
@@ -86,22 +102,22 @@ for f in $@ ; do
     TYPE=$(get_archive_ext $f) || TYPE=$(is_plain_text $f) || { warning "Skipping unrecognized $f" ; continue ; }
     case $TYPE in
         gz)
-            docmd gunzip -c "$f" || fatal
+            regular_unpack "$f" gunzip gzip -c
             ;;
         bz2)
-            docmd bzcat "$f" || fatal
+            regular_unpack "$f" bzcat bzip2
             ;;
         xz)
-            docmd xzcat "$f" || fatal
+            regular_unpack "$f" xzcat xz
             ;;
         Z|compress)
-            docmd zcat "$f" || fatal
+            regular_unpack "$f" zcat gzip
             ;;
         lzma)
-            docmd lzcat "$f" || fatal
+            regular_unpack "$f" lzcat xz
             ;;
         lz4)
-            docmd lz4cat "$f" || fatal
+            regular_unpack "$f" lz4cat lz4
             ;;
         plain)
             docmd cat "$f" || fatal
