@@ -67,7 +67,7 @@ $(get_help HELPOPT)
 print_version()
 {
         echo "Etersoft archive manager version @VERSION@"
-        echo "Copyright (c) Etersoft 2013-2017"
+        echo "Copyright (c) Etersoft 2013-2020"
         echo "This program may be freely redistributed under the terms of the GNU AGPLv3."
 }
 
@@ -157,16 +157,31 @@ case $cmd in
         docmd patool $verbose create "$@"
         ;;
     e|x|-e|-x|u|-u|extract|unpack)          # HELPCMD: extract files from archive
+        # TODO: move to patool
+        if [ "$(get_archive_type "$1" 2>/dev/null)" = "exe" ] ; then
+            docmd 7z x "$1"
+            exit
+        fi
         docmd patool $verbose extract "$@"
         ;;
-# TODO: realize deletion
+# TODO: implement deletion
 #    d|delete)             # HELPCMD: delete file(s) from archive
 #        docmd patool delete "$@"
 #        ;;
     l|-l|list)               # HELPCMD: list archive contents
+        # TODO: move to patool
+        if [ "$(get_archive_type "$1" 2>/dev/null)" = "exe" ] ; then
+            docmd 7z l "$1"
+            exit
+        fi
         docmd patool $verbose list "$@"
         ;;
     t|-t|test|check)         # HELPCMD: test for archive integrity
+        # TODO: move to patool
+        if [ "$(get_archive_type "$1" 2>/dev/null)" = "exe" ] ; then
+            docmd 7z t "$1"
+            exit
+        fi
         docmd patool $verbose test "$@"
         ;;
     type)                 # HELPCMD: print type of archive
