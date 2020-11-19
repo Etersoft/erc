@@ -17,9 +17,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-# it is extension list really
-# list all supported formats: tar rar and so on
-list_formats()
+list_subformats()
 {
 	local i
 	for i in gz bz2 xz bzip2 lz4 lzma ; do
@@ -29,9 +27,10 @@ list_formats()
 	for i in gz bz2 xz lz4 ; do
 		echo "cpio.$i"
 	done
-	a='' patool formats | grep ".* files:" | sed "s/ .*//g"
-	# TODO: do not use patool formats in such case?
-	# See ArchiveCompressions in patool
+}
+
+list_extraformats()
+{
 	cat <<EOF
 bz2
 gz
@@ -41,8 +40,19 @@ tgz
 pax
 zst
 zstd
+exe
 EOF
+}
 
+# it is extension list really
+# list all supported formats: tar rar and so on
+list_formats()
+{
+	list_subformats
+	a='' patool formats | grep ".* files:" | sed "s/ .*//g"
+	# TODO: do not use patool formats in such case?
+	# See ArchiveCompressions in patool
+	list_extraformats
 }
 
 # returns true if arg is XXX: from list_formats

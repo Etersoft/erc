@@ -209,6 +209,8 @@ case $cmd in
         # TODO: print allowed with current programs separately
         if [ -n "$verbose" ] ; then
             docmd patool formats "$@"
+            echo "Also we supports:"
+            ( list_subformats ; list_extraformats ) | sed -e "s|^|  |"
         else
             list_formats
         fi
