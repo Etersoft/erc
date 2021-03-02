@@ -104,12 +104,6 @@ esac
 
 cmd="$1"
 
-case $progname in
-    unerc)
-        cmd=extract
-    ;;
-esac
-
 eval lastarg=\${$#}
 
 # if the first arg is some archive, suggest extract
@@ -126,6 +120,8 @@ elif [ -d "$cmd" ] && [ -z "$2" ] ; then
 # erc dir zip:
 elif test -r "$cmd" && is_target_format "$2" ; then
     cmd=pack
+elif [ "$progname" = "unerc" ] ; then
+    cmd=extract
 else
     shift
 fi
