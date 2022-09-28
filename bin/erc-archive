@@ -20,7 +20,7 @@
 list_subformats()
 {
 	local i
-	for i in gz bz2 xz bzip2 lz4 lzma ; do
+	for i in gz bz2 xz bzip2 lz4 lzma zst zstd ; do
 		echo "tar.$i"
 	done
 
