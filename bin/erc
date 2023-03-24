@@ -31,7 +31,7 @@ load_helper()
 }
 
 load_helper erc-sh-functions
-load_helper erc-archive
+load_helper erc-sh-archive
 
 check_tty
 
