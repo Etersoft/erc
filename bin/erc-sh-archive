@@ -74,6 +74,8 @@ pax
 zst
 zstd
 exe
+AppImage
+appimage
 EOF
 }
 
