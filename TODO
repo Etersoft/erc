@@ -1,6 +1,11 @@
 patool: msi lz4
 pzstd zstd
 
+Сделать форк patool
+
+Добавить erc mount / erc umount
+archivemount и прочее через fuse
+
 Добавить параметр для compression level (0-9) и параллельные слова. Чтобы была возможность управлять сжатием
 https://sevenzip.osdn.jp/chm/cmdline/switches/method.htm
 
