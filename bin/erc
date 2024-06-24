@@ -102,14 +102,25 @@ extract_archive()
 	arc="$(realpath -s "$arc")"
 	tdir=$(mktemp -d $(pwd)/UXXXXXXXX) && cd "$tdir" || fatal
 
-	local TSUBDIR="$(basename "$arc" .$type)"
+	local TSUBDIR="$(basename "$arc" .$type | sed -e 's|^tar\.||')"
 
+	# TODO: check if there is only one file?
+	# use subdir if there is no subdir in archive
 	case "$type" in
-		tar.*|tgz)
-			# TODO: check if there is only one file?
-			# use subdir if there is no subdir in archive
-			TSUBDIR="$(basename "$arc" .$(echo $type | sed -e 's|^tar\.||') )"
-			docmd $HAVE_7Z x -so "$arc" | docmd $HAVE_7Z x -y -si -ttar
+		tar.gz|tgz)
+			is_command gzip || fatal "Could not find gzip package. Please install gzip package and retry."
+			extract_command "tar -xhzf" "$arc"
+			;;
+		tar.xz|txz|tar.lzma)
+			is_command xz || fatal "Could not find xz package. Please install xz package and retry."
+			extract_command "tar -xhJf" "$arc"
+			;;
+		tar.zst)
+			is_command zstd || fatal "Could not find zstd package. Please install zstd package and retry."
+			extract_command "tar -I zstd -xhf" "$arc"
+			;;
+		tar)
+			extract_command "tar -xhf" "$arc"
 			;;
 		*)
 			docmd $HAVE_7Z x -y "$arc" "$@"
@@ -404,4 +415,3 @@ case $cmd in
         fatal "Unknown command $1"
         ;;
 esac
-
