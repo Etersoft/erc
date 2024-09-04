@@ -100,7 +100,7 @@ extract_archive()
 	fi
 
 	arc="$(realpath -s "$arc")"
-	tdir=$(mktemp -d $(pwd)/UXXXXXXXX) && cd "$tdir" || fatal
+	tdir="$(mktemp -d "$(pwd)/UXXXXXXXX")" && cd "$tdir" || fatal
 
 	local TSUBDIR="$(basename "$arc" .$type | sed -e 's|^tar\.||')"
 
@@ -131,10 +131,10 @@ extract_archive()
 	cd - >/dev/null
 	# if only one dir in the subdir
 	if [ -e "$(echo $tdir/*)" ] ; then
-		mv $tdir/* .
-		rmdir $tdir
+		mv "$tdir"/* .
+		rmdir "$tdir"
 	else
-		mv $tdir "$TSUBDIR"
+		mv "$tdir" "$TSUBDIR"
 	fi
 }
 
