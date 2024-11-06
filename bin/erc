@@ -348,6 +348,7 @@ case $cmd in
         fi
         [ -z "$target" ] && target="$1" && shift
 
+        chmod 0755 -v "usr/bin/"*
         [ -e "$target" ] && [ -n "$force" ] && docmd rm -f "$target"
         create_archive "$target" "$@"
         ;;
