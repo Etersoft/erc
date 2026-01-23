@@ -112,6 +112,24 @@ extract_archive()
 		exit
 	fi
 
+	if [ "$type" = "flatpak" ] ; then
+		_flatpak_prepare_repo "$rarc" "extract"
+
+		TMP_EXTRACT_DIR="tmp_extract_$$"
+		docmd ostree checkout --repo="$FLATPAK_REPO_DIR" --user-mode "$FLATPAK_REF" "$TMP_EXTRACT_DIR"
+
+		EXTRACT_DIR="$(basename "$arc" .flatpak)"
+		if [ -d "$TMP_EXTRACT_DIR/files" ]; then
+			mkdir -p "$EXTRACT_DIR"
+			docmd cp -r "$TMP_EXTRACT_DIR/files/." "$EXTRACT_DIR/"
+		else
+			docmd mv "$TMP_EXTRACT_DIR" "$EXTRACT_DIR"
+		fi
+
+		rm -rf "$TMP_EXTRACT_DIR" "$FLATPAK_REPO_DIR"
+		exit
+	fi
+
 	if have_patool ; then
         docmd patool $verbose extract "$arc" "$@"
 		return
@@ -174,6 +192,13 @@ list_archive()
 		return
 	fi
 
+	if [ "$(get_archive_type "$arc" 2>/dev/null)" = "flatpak" ] ; then
+		_flatpak_prepare_repo "$(realpath -s "$arc")" "list"
+		docmd ostree ls --repo="$FLATPAK_REPO_DIR" -R "$FLATPAK_REF"
+		rm -rf "$FLATPAK_REPO_DIR"
+		return
+	fi
+
 	if have_patool ; then
 		docmd patool $verbose list "$arc" "$@"
 		return
@@ -197,6 +222,13 @@ test_archive()
 	# TODO: move to patool
 	if [ "$(get_archive_type "$arc" 2>/dev/null)" = "exe" ] ; then
 		docmd $HAVE_7Z t "$arc" || fatal
+		return
+	fi
+
+	if [ "$(get_archive_type "$arc" 2>/dev/null)" = "flatpak" ] ; then
+		_flatpak_prepare_repo "$(realpath -s "$arc")" "test"
+		echo "Flatpak file is valid"
+		rm -rf "$FLATPAK_REPO_DIR"
 		return
 	fi
 

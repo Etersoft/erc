@@ -245,3 +245,27 @@ subst()
     sed -i -e "$@"
 }
 fi
+
+# init OSTree repo and import flatpak (sets FLATPAK_REPO_DIR, FLATPAK_REF)
+_flatpak_prepare_repo()
+{
+	local flatpak_file="$1"
+	local operation="$2"
+
+	if ! is_command ostree || ! is_command flatpak; then
+		fatal "ostree and flatpak are required to $operation flatpak files"
+	fi
+
+	FLATPAK_REPO_DIR="repo_$$_$(date +%s)"
+
+	docmd ostree init --repo="$FLATPAK_REPO_DIR" --mode=archive
+
+	flatpak build-import-bundle "$FLATPAK_REPO_DIR" "$flatpak_file" >/dev/null 2>&1 || fatal "failed to import flatpak bundle"
+
+	FLATPAK_REF=$(ostree refs --repo="$FLATPAK_REPO_DIR" | head -n 1)
+	if [ -z "$FLATPAK_REF" ]; then
+		rm -rf "$FLATPAK_REPO_DIR"
+		fatal "could not get ref from repository"
+	fi
+}
+
